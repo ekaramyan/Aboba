@@ -1,6 +1,8 @@
 .App {
   background: #fff;
+  width: 100%;
 }
 .App h2 {
   color: #000;
+  font-size: 4rem;
 }
