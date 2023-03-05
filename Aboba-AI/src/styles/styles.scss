@@ -1,0 +1,20 @@
+@import '_reset';
+
+.App{
+    background: #fff;
+    width: 100vh;
+    display: flex;
+    margin: 0 auto;
+    border-radius: 15px;
+
+    h2{
+        color: #000;
+        font-size: 4rem;
+        text-align: center;
+        width: 100%;
+
+    }
+    form{
+        
+    }
+}

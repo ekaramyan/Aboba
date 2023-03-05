@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import './styles.scss'
+import './styles/styles.scss'
 
 function App() {
 
