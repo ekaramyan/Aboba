@@ -1,25 +1,33 @@
-// import { Configuration, OpenAIApi } from "openai";
 import axios from 'axios'
 
-const baseURL = 'https://api.openai.com/v1';
-// const apiKey = import.meta.env.VITE_CHATGPT_API_KEY;
-const apiKey = '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'
-
-const axiosInstance = axios.create({
-    baseURL,
-    headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        "OpenAI-Organization": "org-hx5M3UFBDsI9FP5Qd8gYDI3r"
-    },
-});
+const url = 'https://api.openai.com/v1';
+const apiKey = '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'
+const headers = {
+    'Authorization': `Bearer ${apiKey}`,
+    "OpenAI-Organization": "org-hx5M3UFBDsI9FP5Qd8gYDI3r",
+    'Content-Type': 'application/json'
+}
 
 export async function generateText(prompt) {
-    const response = await axiosInstance.post('/engines/davinci-codex/completions', {
-        prompt,
-        max_tokens: 150,
-        n: 1,
-        stop: "\n",
-    });
+    const data = {
+        prompt: prompt,
+        // model: "text-davinci-002",
+        max_tokens: 60,
+        temperature: 0.5,
+        top_p: 1,
+        frequency_penalty: 0,
+        presence_penalty: 0
+    };
 
-    return response.data.choices[0].text.trim();
+    return axios.post(`${url}/engines/davinci/completions`, data, { headers: headers })
+        .then(response => console.log(response.data))
+        .catch(error => {
+            if (error.response) {
+                console.log(error.response.data);
+                console.log(error.response.status);
+                console.log(error.response.headers);
+            } else {
+                console.log('Error', error.message);
+            }
+        });
 }
