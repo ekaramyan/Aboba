@@ -8,8 +8,9 @@ function App() {
     <>
       <div className="App">
         <h2>Your AI helper</h2>
-        <AIAnswer />
-      </div></>
+        <AIAnswer className='ai-answer'/>
+      </div>
+      </>
 
 
   )

@@ -82,9 +82,11 @@ select {
 }
 .App {
   background: #ebf3f2;
-  width: 100vh;
+  width: 50%;
+  max-width: 100vw;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   margin: 0 auto;
   border-radius: 15px;
 }
@@ -94,4 +96,54 @@ select {
   text-align: center;
   width: 100%;
   height: 50%;
+}
+
+.ai-answer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.ai-answer .output {
+  border: 1px solid black;
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  white-space: pre-wrap;
+  font-size: 1.5rem;
+}
+.ai-answer form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 auto;
+  width: 80%;
+  background: #ebf3f2;
+}
+.ai-answer form .input__wrap {
+  width: 100%;
+  margin-bottom: 1rem;
+  font-size: 1.125rem;
+}
+.ai-answer form input {
+  font-size: 1.125rem;
+  height: 3rem;
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 1rem;
+  resize: vertical;
+  border-radius: 15px;
+  background: rgba(246, 246, 246, 0.7764705882);
+  box-shadow: 5px 5px 35px rgba(107, 51, 100, 0.5176470588);
+}
+.ai-answer form button {
+  font-size: 1.125rem;
+  padding: 0.5rem 1rem;
+  margin: 0.5rem;
+  border-radius: 15px;
+  background: #d3ffff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.ai-answer form button:hover {
+  transform: scale(1.2) translate(0px, -3px);
 }
