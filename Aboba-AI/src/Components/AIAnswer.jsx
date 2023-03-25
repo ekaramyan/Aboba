@@ -5,10 +5,20 @@ const AIAnswer = () => {
     const [inputValue, setInputValue] = useState('');
     const [outputValue, setOutputValue] = useState('');
 
+    // const handleSubmit = async (event) => {
+    //     event.preventDefault();
+    //     const generatedText = await generateText(inputValue);
+    //     if (generatedText) {
+    //         console.log(response);
+    //         setOutputValue(generatedText.data.choices[0].text);
+    //     }
+    // };
     const handleSubmit = async (event) => {
         event.preventDefault();
         const generatedText = await generateText(inputValue);
-        setOutputValue(generatedText);
+        if (generatedText) {
+            setOutputValue(generatedText);
+        }
     };
 
     return (

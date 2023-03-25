@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const url = 'https://api.openai.com/v1';
-const apiKey = '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'
+const apiKey = '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'
 const headers = {
     'Authorization': `Bearer ${apiKey}`,
     "OpenAI-Organization": "org-hx5M3UFBDsI9FP5Qd8gYDI3r",
@@ -16,18 +16,32 @@ export async function generateText(prompt) {
         temperature: 0.5,
         top_p: 1,
         frequency_penalty: 0,
-        presence_penalty: 0
+        presence_penalty: 0,
+        n: 1,
+        stop: stop
     };
 
-    return axios.post(`${url}/engines/davinci/completions`, data, { headers: headers })
-        .then(response => console.log(response.data))
-        .catch(error => {
-            if (error.response) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
-            } else {
-                console.log('Error', error.message);
-            }
-        });
+    // return axios.post(`${url}/engines/davinci/completions`, data, { headers: headers })
+    //     .then(response => console.log(response.data))
+    //     .then(response.data.choices[0].text)
+    //     .catch(error => {
+    //         if (error.response) {
+    //             console.log(error.response.data);
+    //             console.log(error.response.status);
+    //             console.log(error.response.headers);
+
+    //         } else {
+    //             console.log('Error', error.message);
+    //         }
+    //     });
+    try {
+        const response = await axios.post(`${url}/engines/davinci/completions`, data, { headers: headers });
+        const generatedText = response.data.choices[0].text;
+        return generatedText;
+    } catch (error) {
+        console.log('Error', error.message);
+        return null;
+    }
+
 }
+
