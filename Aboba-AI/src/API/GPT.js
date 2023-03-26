@@ -39,21 +39,3 @@ export async function generateText(prompt) {
     }
 
 }
-
-
-
-
-
-    // return axios.post(`${url}/engines/davinci/completions`, data, { headers: headers })
-    //     .then(response => console.log(response.data))
-    //     .then(response.data.choices[0].text)
-    //     .catch(error => {
-    //         if (error.response) {
-    //             console.log(error.response.data);
-    //             console.log(error.response.status);
-    //             console.log(error.response.headers);
-
-    //         } else {
-    //             console.log('Error', error.message);
-    //         }
-    //     });
