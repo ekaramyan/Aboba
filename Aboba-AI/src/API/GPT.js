@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const url = 'https://api.openai.com/v1';
-const apiKey = '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'
+const apiKey = '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'
 const headers = {
     'Authorization': `Bearer ${apiKey}`,
     "OpenAI-Organization": "org-hx5M3UFBDsI9FP5Qd8gYDI3r",

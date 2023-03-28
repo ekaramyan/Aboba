@@ -113,7 +113,7 @@ select {
 }
 .ai-answer form {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   margin: 0 auto;
   width: 80%;
@@ -147,4 +147,7 @@ select {
 .ai-answer form button:hover {
   background: #f7ffd3;
   transform: scale(1.2) translate(0px, -3px);
+}
+.ai-answer form .controls {
+  flex-direction: row;
 }
