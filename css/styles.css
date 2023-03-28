@@ -145,5 +145,6 @@ select {
   transition: 0.3s;
 }
 .ai-answer form button:hover {
+  background: #f7ffd3;
   transform: scale(1.2) translate(0px, -3px);
 }

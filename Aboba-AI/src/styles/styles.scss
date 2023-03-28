@@ -68,6 +68,7 @@
       cursor: pointer;
       transition: .3s;
       &:hover{
+        background:#f7ffd3;
         transform: scale(1.2) translate(0px, -3px);
       }
     }
