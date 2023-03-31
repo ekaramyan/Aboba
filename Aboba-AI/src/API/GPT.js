@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const url = 'https://api.openai.com/v1';
-const apiKey = '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'
+const apiKey = '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'
 const headers = {
     'Authorization': `Bearer ${apiKey}`,
     "OpenAI-Organization": "org-hx5M3UFBDsI9FP5Qd8gYDI3r",
@@ -20,7 +20,6 @@ export async function generateText(prompt) {
         logprobs: 1,
         stop: stop
     };
-
 
     try {
         const response = await axios.post(`${url}/completions`, data, { headers: headers });

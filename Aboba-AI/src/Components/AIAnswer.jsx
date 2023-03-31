@@ -1,6 +1,10 @@
 import React, { useState } from 'react'
 import { generateText } from '../API/GPT';
 import { TextToSpeech } from '../API/voiceAPI';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons'
+
+{/* <FontAwesomeIcon icon="fa-solid fa-volume-high" style={{ color: "#000000", name: 'volume' }}/> */ }
 
 const AIAnswer = () => {
     const [inputValue, setInputValue] = useState('');
@@ -24,13 +28,16 @@ const AIAnswer = () => {
             }
         }
     };
+    if(outputValue){
+
+    }
 
     return (
         <div className='ai-answer'>
             <div className='output'>
                 <p>{outputValue}</p>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form >
                 <div className='input__wrap'>
 
                     <input type="text" placeholder='Input your request...✎'
@@ -38,13 +45,10 @@ const AIAnswer = () => {
                         onChange={(event) => setInputValue(event.target.value)}
                         onKeyPress={handleKeyPress}
                     />
-
-
+                        <button className='talk' ><FontAwesomeIcon icon={faVolumeHigh} style={{ color: "#000000" }} /></button>
+                        <button type="submit" onClick={handleSubmit}>Submit</button>
                 </div>
-                <div className='controls'>
-                    <button className='talk' />
-                    <button type="submit">Submit</button>
-                </div>
+
             </form>
         </div>
     );

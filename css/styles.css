@@ -123,13 +123,14 @@ select {
   width: 100%;
   margin-bottom: 1rem;
   font-size: 1.125rem;
+  display: flex;
+  gap: 3%;
 }
 .ai-answer form input {
   font-size: 1.125rem;
   height: 3rem;
   width: 100%;
   padding: 0.5rem;
-  margin-bottom: 1rem;
   resize: vertical;
   border-radius: 15px;
   background: rgba(246, 246, 246, 0.7764705882);
@@ -138,7 +139,6 @@ select {
 .ai-answer form button {
   font-size: 1.125rem;
   padding: 0.5rem 1rem;
-  margin: 0.5rem;
   border-radius: 15px;
   background: #d3ffff;
   cursor: pointer;

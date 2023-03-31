@@ -42,10 +42,11 @@
     background: #ebf3f2;
 
     .input__wrap {
-        width: 100%;
+      width: 100%;
       margin-bottom: 1rem;
       font-size: 1.125rem;
-
+      display: flex;
+      gap: 3%;
     }
 
     input {
@@ -53,7 +54,6 @@
       height: 3rem;
       width: 100%;
       padding: 0.5rem;
-      margin-bottom: 1rem;
       resize: vertical;
       border-radius: 15px;
       background: #f6f6f6c6;
@@ -63,7 +63,6 @@
     button {
       font-size: 1.125rem;
       padding: 0.5rem 1rem;
-      margin: 0.5rem;
       border-radius: 15px;
       background: #d3ffff;
       cursor: pointer;
