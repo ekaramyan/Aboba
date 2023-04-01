@@ -6,7 +6,7 @@ const apiKey = 'AIzaSyDAz8fRlFpJN-JuZrsoMw8FWfo113Njdsw'
 const headers = {
     // 'Authorization': `${apiKey}`,
     // "X-User-ID": "DaXxPJKk52U1S2rZ3xoHEkFMme52",
-    'Content-Type': 'application/json'
+    'Content-Type': 'audio/mp3'
 }
 
 export async function TextToSpeech(voice_content) {
@@ -25,8 +25,8 @@ export async function TextToSpeech(voice_content) {
     };
 
     try {
-        const response = await axios.post(`${url}text:synthesize?key=${apiKey}`, data, { headers: headers, responseType: 'blob' });
-        const generatedVoice = response.data;
+        const response = await axios.post(`${url}text:synthesize?key=${apiKey}`, data, { headers: headers, responseType: 'arraybuffer' });
+        const generatedVoice = new Blob([response.data], { type: 'audio/mp3' });
         console.log(generatedVoice)
         return generatedVoice;
     }

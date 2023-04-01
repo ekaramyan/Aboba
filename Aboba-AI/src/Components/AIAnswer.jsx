@@ -5,15 +5,15 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import { useSound } from 'use-sound';
 
-{/* <FontAwesomeIcon icon="fa-solid fa-volume-high" style={{ color: "#000000", name: 'volume' }}/> */ }
 
 const AIAnswer = () => {
     const [inputValue, setInputValue] = useState('');
     const [outputValue, setOutputValue] = useState('');
     const [inputVoice, setinputVoice] = useState(null);
-    const [outputVoice, setOutputVoice] = useState('');
+    const [outputVoice, setOutputVoice] = useState(null);
     const [loading, setLoading] = useState(false);
-    const [playSound, loaded] = useSound(outputVoice, { volume: 0.5 });
+    //  const [isPlaying, setIsPlaying] = useState(false);
+
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -39,51 +39,68 @@ const AIAnswer = () => {
                 setLoading(true);
                 const soundBlob = await TextToSpeech(outputValue);
                 if (soundBlob) {
-                    const audioUrl = URL.createObjectURL(soundBlob);
-
-                    setLoading(false);
-                    console.log("audioUrl:", audioUrl);
-
-                    const audio = new Audio(audioUrl);
-
-                    audio.addEventListener('canplaythrough', () => {
-                        audio.play();
-                        setOutputVoice(audio);
-                    });
-
+                    // const audioUrl = URL.createObjectURL(soundBlob);
+                    // console.log("audioUrl:", audioUrl);
+                    setOutputVoice(soundBlob);
+                    console.log(outputVoice)
                 }
-
+                setLoading(false);
             } catch (error) {
                 console.log("Error creating audio URL:", error);
                 setLoading(false);
             }
-
         }
+        // if (outputValue) {
+        //     try {
+        //         setLoading(true);
+        //         const soundBlob = await TextToSpeech(outputValue);
+        //         console.log('soundBlob type:', soundBlob.type);
+        //         if (soundBlob) {
+        //             setOutputVoice(soundBlob);
+        //         }
+        //         setLoading(false);
+        //     } catch (error) {
+        //         console.log("Error creating audio URL:", error);
+        //         setLoading(false);
+        //     }
+        // }
     };
 
-
-    //   const [playSound, { loaded }] = useSound();
-
+    const [playSound, { sound, stop }] = useSound(outputVoice, { volume: 0.5 });
 
 
-    const handlePlayClick = (event) => {
-        event.preventDefault();
-        if (outputValue) {
-            handlePlay();
-            // playSound();
-        }
-    };
-    
     useEffect(() => {
-        if (loaded && outputVoice !== '') {
-            const audio = new Audio(outputVoice);
-            console.log(loaded)
-            audio.addEventListener('canplaythrough', () => {
-                console.log(loaded)
-                playSound();
-            });
+        if (outputVoice) {
+            const audioUrl = URL.createObjectURL(outputVoice); // создаем URL-адрес объекта Blob
+            playSound({ sound: audioUrl }); // передаем URL-адрес в useSound
         }
-    }, [loaded, outputVoice, playSound]);
+        return () => {
+            if (sound) {
+                stop();
+                URL.revokeObjectURL(sound);
+            }
+        };
+    }, [outputVoice, playSound, stop]);
+
+    // useEffect(() => {
+    //     if (outputVoice) {
+    //         const audioElement = new Audio();
+    //         audioElement.src = URL.createObjectURL(outputVoice);
+    //         audioElement.volume = 0.5;
+    //         audioElement.play();
+    //     }
+    // }, [outputVoice]);
+
+    const handlePlayClick = async (event) => {
+        event.preventDefault();
+        if (outputValue ) {
+            // console.log(loaded)
+            await handlePlay()
+            console.log(outputVoice)
+            playSound() // здесь вызываем функцию playSound, которая воспроизводит аудио
+        }
+    };
+
     // if (outputValue) {
     //     setTimeout(handlePlayClick, 1000)
     //     console.log(outputVoice)
