@@ -1,31 +1,36 @@
 import axios from 'axios'
 import { generateText } from './GPT';
 
-const url = 'https://play.ht/api/v1';
-const apiKey = '08b1a25dcc294147b4c000039cf109b1'
+const url = 'https://texttospeech.googleapis.com/v1/';
+const apiKey = 'AIzaSyDAz8fRlFpJN-JuZrsoMw8FWfo113Njdsw'
 const headers = {
-    'Authorization': `Bearer ${apiKey}`,
-    "X-User-ID": "DaXxPJKk52U1S2rZ3xoHEkFMme52",
+    // 'Authorization': `${apiKey}`,
+    // "X-User-ID": "DaXxPJKk52U1S2rZ3xoHEkFMme52",
     'Content-Type': 'application/json'
 }
-const voice_content = 'generateText';
 
-export async function TextToSpeech() {
+export async function TextToSpeech(voice_content) {
     const data = {
-        "voice": 'Nolan',
-        "content": `${voice_content}`,
-        // "title": string, // Optional
-        // "speed": string, // Optional
-        // "preset": string // Optional
+        'input': {
+            "text": `${voice_content}`,
+        },
+        'voice': {
+            'languageCode': 'en-gb',
+            'name': 'en-GB-Standard-A',
+            'ssmlGender': 'MALE'
+        },
+        'audioConfig': {
+            'audioEncoding': 'MP3'
+        }
     };
 
-
-
     try {
-        const response = await axios.post(`${url}/convert`, data, { headers: headers });
-        const generatedVoice = response.data.choices[0].text;
+        const response = await axios.post(`${url}text:synthesize?key=${apiKey}`, data, { headers: headers, responseType: 'blob' });
+        const generatedVoice = response.data;
+        console.log(generatedVoice)
         return generatedVoice;
-    } catch (error) {
+    }
+    catch (error) {
         if (error.response) {
             console.log(error.response.data);
             console.log(error.response.status);
