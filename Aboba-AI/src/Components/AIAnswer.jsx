@@ -4,7 +4,9 @@ import { TextToSpeech } from '../API/voiceAPI';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 // import base64js from 'base64-js';
-import { ffmpeg, createFFmpeg } from '@ffmpeg/ffmpeg';
+import { createFFmpeg } from '@ffmpeg/ffmpeg';
+import { saveAs } from 'file-saver';
+
 
 const AIAnswer = () => {
     const [inputValue, setInputValue] = useState('');
@@ -39,7 +41,7 @@ const AIAnswer = () => {
 
     const handlePlayClick = async (event) => {
         event.preventDefault();
-        const ff = createFFmpeg({ log: true, corePath: ffmpeg });
+        const ff = createFFmpeg({ log: true });
         if (audioUrl) {
             const audio = new Audio(audioUrl);
             audio.type = 'audio/mpeg';
@@ -57,12 +59,14 @@ const AIAnswer = () => {
                     // Загружаем ffmpeg
                     await ff.load();
                     // Конвертируем blob в mp3
-                    await ff.write('sound.mp3', soundBlob);
+                    // Конвертируем blob в mp3
+                    await ff.FS('writeFile', 'sound.mp3', await fetch(soundBlob));
                     await ff.run('-i', 'sound.mp3', '-codec:a', 'libmp3lame', '-b:a', '128k', 'output.mp3');
-                    const mp3Data = await ff.read('output.mp3');
+                    const mp3Data = await ff.FS('readFile', 'output.mp3');
+
 
                     // Преобразуем полученные данные в blob
-                    const byteArray = new Uint8Array(mp3Data);
+                    const byteArray = new Uint8Array(mp3Data.buffer);
                     const blob = new Blob([byteArray], { type: 'audio/mpeg' });
 
                     // удаляем все старые записи из localStorage
@@ -75,15 +79,15 @@ const AIAnswer = () => {
                     saveAs(blob, filename);
                     localStorage.setItem('audioUrl-' + filename, URL.createObjectURL(blob));
                     setAudioUrl(URL.createObjectURL(blob));
-                };
+                }
             } catch (error) {
                 console.log("Error saving audio to localStorage:", error);
             } finally {
                 setLoading(false);
             }
+        }
+    };
 
-        };
-    }
     useEffect(() => {
         const audioUrls = Object.keys(localStorage).filter(key => key.startsWith('audioUrl-'));
         if (audioUrls.length > 0) {
