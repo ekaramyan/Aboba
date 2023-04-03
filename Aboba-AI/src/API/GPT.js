@@ -2,7 +2,7 @@ import axios from 'axios'
 
 
 const url = 'https://api.openai.com/v1';
-const apiKey = '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'
+const apiKey = import.meta.env.VITE_CHATGPT_API_KEY;
 const headers = {
     'Authorization': `Bearer ${apiKey}`,
     "OpenAI-Organization": "org-hx5M3UFBDsI9FP5Qd8gYDI3r",

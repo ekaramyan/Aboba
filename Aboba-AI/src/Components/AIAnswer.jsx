@@ -3,8 +3,8 @@ import { generateText } from '../API/GPT';
 import { TextToSpeech } from '../API/voiceAPI';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
-import { useSound } from 'use-sound';
-
+// import base64js from 'base64-js';
+import { ffmpeg, createFFmpeg } from '@ffmpeg/ffmpeg';
 
 const AIAnswer = () => {
     const [inputValue, setInputValue] = useState('');
@@ -13,99 +13,92 @@ const AIAnswer = () => {
     const [outputVoice, setOutputVoice] = useState(null);
     const [loading, setLoading] = useState(false);
     //  const [isPlaying, setIsPlaying] = useState(false);
-
+    const [playAudio, setPlayAudio] = useState(false);
+    const [audioUrl, setAudioUrl] = useState('');
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         const generatedText = await generateText(inputValue);
         if (generatedText) {
             setOutputValue(generatedText);
+            setAudioUrl('');
         }
     };
+
     const handleKeyPress = async (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
             const generatedText = await generateText(inputValue);
             if (generatedText) {
                 setOutputValue(generatedText);
+                setAudioUrl('');
             }
         }
     };
 
-
-    const handlePlay = async () => {
-        if (outputValue) {
-            try {
-                setLoading(true);
-                const soundBlob = await TextToSpeech(outputValue);
-                if (soundBlob) {
-                    // const audioUrl = URL.createObjectURL(soundBlob);
-                    // console.log("audioUrl:", audioUrl);
-                    setOutputVoice(soundBlob);
-                    console.log(outputVoice)
-                }
-                setLoading(false);
-            } catch (error) {
-                console.log("Error creating audio URL:", error);
-                setLoading(false);
-            }
-        }
-        // if (outputValue) {
-        //     try {
-        //         setLoading(true);
-        //         const soundBlob = await TextToSpeech(outputValue);
-        //         console.log('soundBlob type:', soundBlob.type);
-        //         if (soundBlob) {
-        //             setOutputVoice(soundBlob);
-        //         }
-        //         setLoading(false);
-        //     } catch (error) {
-        //         console.log("Error creating audio URL:", error);
-        //         setLoading(false);
-        //     }
-        // }
-    };
-
-    const [playSound, { sound, stop }] = useSound(outputVoice, { volume: 0.5 });
-
-
-    useEffect(() => {
-        if (outputVoice) {
-            const audioUrl = URL.createObjectURL(outputVoice); // создаем URL-адрес объекта Blob
-            playSound({ sound: audioUrl }); // передаем URL-адрес в useSound
-        }
-        return () => {
-            if (sound) {
-                stop();
-                URL.revokeObjectURL(sound);
-            }
-        };
-    }, [outputVoice, playSound, stop]);
-
-    // useEffect(() => {
-    //     if (outputVoice) {
-    //         const audioElement = new Audio();
-    //         audioElement.src = URL.createObjectURL(outputVoice);
-    //         audioElement.volume = 0.5;
-    //         audioElement.play();
-    //     }
-    // }, [outputVoice]);
 
     const handlePlayClick = async (event) => {
         event.preventDefault();
-        if (outputValue ) {
-            // console.log(loaded)
-            await handlePlay()
-            console.log(outputVoice)
-            playSound() // здесь вызываем функцию playSound, которая воспроизводит аудио
-        }
-    };
+        const ff = createFFmpeg({ log: true, corePath: ffmpeg });
+        if (audioUrl) {
+            const audio = new Audio(audioUrl);
+            audio.type = 'audio/mpeg';
+            audio.addEventListener('loadeddata', () => {
+                audio.play().catch(error => {
+                    console.log("Error playing audio:", error);
+                });
+            });
+        } else if (outputValue) {
+            setLoading(true);
+            try {
+                // Получаем звук с помощью TextToSpeech
+                const soundBlob = await TextToSpeech(outputValue);
+                if (soundBlob) {
+                    // Загружаем ffmpeg
+                    await ff.load();
+                    // Конвертируем blob в mp3
+                    await ff.write('sound.mp3', soundBlob);
+                    await ff.run('-i', 'sound.mp3', '-codec:a', 'libmp3lame', '-b:a', '128k', 'output.mp3');
+                    const mp3Data = await ff.read('output.mp3');
 
-    // if (outputValue) {
-    //     setTimeout(handlePlayClick, 1000)
-    //     console.log(outputVoice)
-    // }
-    // console.log(outputVoice)
+                    // Преобразуем полученные данные в blob
+                    const byteArray = new Uint8Array(mp3Data);
+                    const blob = new Blob([byteArray], { type: 'audio/mpeg' });
+
+                    // удаляем все старые записи из localStorage
+                    Object.keys(localStorage).forEach((key) => {
+                        if (key.startsWith('audioUrl-')) {
+                            localStorage.removeItem(key);
+                        }
+                    });
+                    const filename = 'audio-' + Date.now() + '.mp3';
+                    saveAs(blob, filename);
+                    localStorage.setItem('audioUrl-' + filename, URL.createObjectURL(blob));
+                    setAudioUrl(URL.createObjectURL(blob));
+                };
+            } catch (error) {
+                console.log("Error saving audio to localStorage:", error);
+            } finally {
+                setLoading(false);
+            }
+
+        };
+    }
+    useEffect(() => {
+        const audioUrls = Object.keys(localStorage).filter(key => key.startsWith('audioUrl-'));
+        if (audioUrls.length > 0) {
+            const lastAudioUrl = audioUrls[audioUrls.length - 1];
+            const audio = new Audio(localStorage.getItem(lastAudioUrl));
+            audio.type = 'audio/mpeg';
+            audio.addEventListener('loadeddata', () => {
+                audio.play().catch(error => {
+                    console.log("Error playing audio:", error);
+                });
+            });
+            setAudioUrl(localStorage.getItem(lastAudioUrl));
+        }
+    }, []);
+
 
     return (
         <div className='ai-answer'>
@@ -120,11 +113,12 @@ const AIAnswer = () => {
                         onChange={(event) => setInputValue(event.target.value)}
                         onKeyPress={handleKeyPress}
                     />
-                    <button className='talk' onClick={handlePlayClick}><FontAwesomeIcon icon={faVolumeHigh} style={{ color: "#000000" }} /></button>
+                    <button className='talk' onClick={handlePlayClick} disabled={!outputValue || loading}><FontAwesomeIcon icon={faVolumeHigh} style={{ color: "#000000" }} /></button>
                     <button type="submit" onClick={handleSubmit}>Submit</button>
                 </div>
             </form>
             {loading && <p>Loading sound...</p>}
+            {outputVoice && <audio src={outputVoice} autoPlay />}
         </div>
     );
 };

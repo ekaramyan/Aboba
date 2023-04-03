@@ -2,7 +2,7 @@ import axios from 'axios'
 import { generateText } from './GPT';
 
 const url = 'https://texttospeech.googleapis.com/v1/';
-const apiKey = 'AIzaSyDAz8fRlFpJN-JuZrsoMw8FWfo113Njdsw'
+const apiKey = import.meta.env.VITE_TEXT_TO_SPEECH_API_KEY
 const headers = {
     // 'Authorization': `${apiKey}`,
     // "X-User-ID": "DaXxPJKk52U1S2rZ3xoHEkFMme52",
@@ -15,8 +15,8 @@ export async function TextToSpeech(voice_content) {
             "text": `${voice_content}`,
         },
         'voice': {
-            'languageCode': 'en-gb',
-            'name': 'en-GB-Standard-A',
+            'languageCode': 'en-IN',
+            'name': 'en-IN-Wavenet-B',
             'ssmlGender': 'MALE'
         },
         'audioConfig': {
@@ -25,7 +25,7 @@ export async function TextToSpeech(voice_content) {
     };
 
     try {
-        const response = await axios.post(`${url}text:synthesize?key=${apiKey}`, data, { headers: headers, responseType: 'arraybuffer' });
+        const response = await axios.post(`${url}text:synthesize?key=${apiKey}`, data, { headers: headers, responseType: 'blob' });
         const generatedVoice = new Blob([response.data], { type: 'audio/mp3' });
         console.log(generatedVoice)
         return generatedVoice;
