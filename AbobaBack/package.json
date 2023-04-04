@@ -4,7 +4,8 @@
   "description": "backend for AbobaAI",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server/index.js"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,13 @@
     "ai-project"
   ],
   "author": "ekaramyan",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "ffmpeg": "^0.0.4",
+    "fluent-ffmpeg": "^2.1.2",
+    "uuid": "^9.0.0",
+    "vite-node": "^0.29.8"
+  }
 }

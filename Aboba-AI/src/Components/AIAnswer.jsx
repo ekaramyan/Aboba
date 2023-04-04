@@ -3,6 +3,8 @@ import { generateText } from '../API/GPT';
 import { TextToSpeech } from '../API/voiceAPI';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+import FileSaver from 'file-saver';
 
 
 const AIAnswer = () => {
@@ -15,18 +17,34 @@ const AIAnswer = () => {
     const [playAudio, setPlayAudio] = useState(false);
     const [audioUrl, setAudioUrl] = useState('');
 
+    const SubmitText = async () => {
+        const generatedText = await generateText(outputValue);
+        if (generatedText) {
+            setOutputValue(generatedText);
+            const generatedVoice = await TextToSpeech(generatedText);
+            if (generatedVoice) {
+                const formData = new FormData();
+                formData.append('file', generatedVoice, 'filename.extension');
+                console.log(generatedVoice)
+                const { data } = await axios.post('http://localhost:3001/generateaudio', generatedVoice, {
+                    headers: {
+                        body: formData,
+                        // blob: generatedVoice,
+                        // 'Content-Type': 'application/json'
+                    }
+                });
+                console.log(fileUrl)
+                setAudioUrl(data.fileUrl);
+            } else {
+                console.error('Error generating audio file');
+            }
+        }
+    }
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         setLoading(true);
-        const generatedText = await generateText(inputValue);
-        if (generatedText) {
-            setOutputValue(generatedText);
-            const audio = await TextToSpeech(generatedText);
-            if (audio instanceof Blob) {
-                setAudioUrl(URL.createObjectURL(audio));
-            }
-        }
+        SubmitText()
         setLoading(false);
     };
 
@@ -34,14 +52,7 @@ const AIAnswer = () => {
         if (event.key === 'Enter') {
             event.preventDefault();
             setLoading(true);
-            const generatedText = await generateText(inputValue);
-            if (generatedText) {
-                setOutputValue(generatedText);
-                const audio = await TextToSpeech(generatedText);
-                if (audio instanceof Blob) {
-                    setAudioUrl(URL.createObjectURL(audio));
-                }
-            }
+            SubmitText()
             setLoading(false);
         }
     };
@@ -49,8 +60,7 @@ const AIAnswer = () => {
     const handlePlayClick = async (event) => {
         event.preventDefault();
         if (audioUrl) {
-            const audio = new Audio(audioUrl.replace("localhost:5173", "localhost:3000").slice(5));
-            audio.type = 'audio/mp3';
+            const audio = new Audio('data:audio/mpeg;base64,' + audioUrl);
             console.log(audio)
             audio.play();
         }
@@ -75,7 +85,7 @@ const AIAnswer = () => {
                 </div>
             </form>
             {loading && <p>Loading sound...</p>}
-            {outputVoice && <audio src={URL.createObjectURL(audioUrl)} autoPlay />}
+            {audioUrl && <audio src={audioUrl} autoPlay />}
         </div>
     );
 };
