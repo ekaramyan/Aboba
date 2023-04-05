@@ -24,7 +24,7 @@ const AIAnswer = () => {
             const generatedVoice = await TextToSpeech(generatedText);
             if (generatedVoice) {
                 const formData = new FormData();
-                formData.append('file', generatedVoice, 'filename.extension', formData);
+                formData.append('file', generatedVoice, 'filename.extension');
                 console.log(generatedVoice)
                 const { data } = await axios.post('http://localhost:3001/saveBlob', generatedVoice, {
                     headers: {
@@ -56,6 +56,8 @@ const AIAnswer = () => {
             setLoading(false);
         }
     };
+
+
 
     const handlePlayClick = async (event) => {
         event.preventDefault();
