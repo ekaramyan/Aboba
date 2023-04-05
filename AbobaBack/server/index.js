@@ -1,4 +1,5 @@
 const express = require('express');
+const nodemon = require('nodemon');
 const app = express();
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -6,6 +7,8 @@ const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
 const ffmpeg = require('fluent-ffmpeg');
+const multer = require('multer');
+const upload = multer();
 
 
 const corsOptions = {
@@ -36,48 +39,37 @@ app.get('/cors', cors(corsOptions), (req, res) => {
     res.json({ msg: 'success!' });
 })
 
-app.post('/generateAudio', cors(corsOptions), async (req, res) => {
-    try {
-        // Get the input blob data from the request
-        const blob = req.body;
-        console.log(blob)
+app.post('/saveBlob', upload.single('file'), (req, res) => {
+    const blob = req.body;
+    console.log(blob)
+    // Генерируем уникальный id для файла
+    const fileId = uuidv4();
+    // const file = fs.createWriteStream(fileId);
+    // blob.pipe(file);
+    const filePath = path.join(__dirname, 'blobs', `${fileId}.blob`);
 
-        // Convert the input blob to an MP3 file
-        const inputFile = path.join(__dirname, 'input.webm');
-        fs.writeFileSync(inputFile, blob);
-        const outputFile = path.join(__dirname, 'output.mp3');
-        await new Promise((resolve, reject) => {
-            ffmpeg(inputFile)
-                .inputFormat('webm')
-                .outputOptions('-vn')
-                .output(outputFile)
-                .on('end', resolve)
-                .on('error', reject)
-                .run();
-        });
-
-        // Generate a unique ID for the output file
-        const fileId = uuidv4();
-
-        // Move the output file to the public files directory
-        const publicDir = path.join(__dirname, 'public');
-        fs.mkdirSync(publicDir, { recursive: true });
-        const outputFilePath = path.join(publicDir, `${fileId}.mp3`);
-        fs.renameSync(outputFile, outputFilePath);
-
-        // Generate the URL for the output file
-        const fileUrl = `http://localhost:3001/${fileId}.mp3`;
-
-        // Return the file URL to the client
-        // res.json({ fileUrl });
-        res.header('Access-Control-Allow-Origin', '*');
-        // Отправляем ссылку на фронтенд
-        res.send({ fileUrl });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send('Internal server error');
-    }
+    // Сохраняем blob на сервере
+    // const buffer = Buffer.from(req.body, 'base64');
+    fs.writeFile(filePath, buffer, (err) => {
+        if (err) {
+            console.error(err);
+            res.status(500).send('Unable to save blob');
+        } else {
+            // Формируем ссылку на сохраненный blob
+            const fileUrl = `http://localhost:3001/blobs/${fileId}.blob`;
+            res.send({ fileUrl });
+        }
+    });
 });
+
+// app.post('/uploadBlob', (req, res) => {
+//     // const blob = req.files.blob;
+//     const filename = 'hello.txt';
+//     // const file = fs.createWriteStream(filename);
+//     // blob.pipe(file);
+
+//     res.status(200).send(blob);
+// });
 
 app.use((err, req, res, next) => {
     console.error(err.stack);

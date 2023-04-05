@@ -24,16 +24,16 @@ const AIAnswer = () => {
             const generatedVoice = await TextToSpeech(generatedText);
             if (generatedVoice) {
                 const formData = new FormData();
-                formData.append('file', generatedVoice, 'filename.extension');
+                formData.append('file', generatedVoice, 'filename.extension', formData);
                 console.log(generatedVoice)
-                const { data } = await axios.post('http://localhost:3001/generateaudio', generatedVoice, {
+                const { data } = await axios.post('http://localhost:3001/saveBlob', generatedVoice, {
                     headers: {
                         body: formData,
                         // blob: generatedVoice,
                         // 'Content-Type': 'application/json'
                     }
                 });
-                console.log(fileUrl)
+                console.log(data)
                 setAudioUrl(data.fileUrl);
             } else {
                 console.error('Error generating audio file');
@@ -60,7 +60,7 @@ const AIAnswer = () => {
     const handlePlayClick = async (event) => {
         event.preventDefault();
         if (audioUrl) {
-            const audio = new Audio('data:audio/mpeg;base64,' + audioUrl);
+            const audio = new Audio('data:audio/mpeg' + audioUrl);
             console.log(audio)
             audio.play();
         }
