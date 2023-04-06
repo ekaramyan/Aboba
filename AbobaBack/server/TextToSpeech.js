@@ -4,7 +4,6 @@ const fs = require('fs');
 const util = require('util');
 require('dotenv').config();
 const jsonKey = require('../aboba-ai-ce22fbaafa2a.json');
-// console.log(jsonKey)
 
 const { GoogleAuth } = require('google-auth-library');
 const auth = new GoogleAuth({
@@ -36,13 +35,6 @@ async function quickStart(voiceContent) {
 
         const [audioResponse] = await textToSpeechClient.synthesizeSpeech(requestBody);
         console.log(audioResponse)
-
-        // const writeFile = util.promisify(fs.writeFile);
-        // await writeFile('./server/audio/output.mp3', audioResponse.audioContent, 'binary');
-        // console.log('Audio content written to file: output.mp3');
-
-        // const response = await axios.post('https://texttospeech.googleapis.com/v1/text:synthesize?key=' + 'ce22fbaafa2aa034ef36635f5902a0ac308d6334', JSON.stringify(requestBody), config);
-        // const audioBuffer = Buffer.from(response.data);
         return audioResponse;
     } catch (error) {
         console.log('Error in textToSpeech:', error);

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import './styles/styles.scss'
 import AIAnswer from './Components/AIAnswer'
-import Example from './Components/test'
 
 function App() {
 
@@ -10,7 +9,6 @@ function App() {
       <div className="App">
         <h2>Your AI helper</h2>
         <AIAnswer className='ai-answer' />
-        {/* <Example /> */}
       </div>
     </>
 

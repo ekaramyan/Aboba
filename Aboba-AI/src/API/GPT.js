@@ -14,7 +14,7 @@ export async function generateText(prompt) {
         prompt: prompt,
         model: "text-davinci-003",
         max_tokens: 150,
-        temperature: 0.9,
+        temperature: 1.5,
         frequency_penalty: 0,
         presence_penalty: 0,
         n: 1,

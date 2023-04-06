@@ -81,6 +81,20 @@ select {
   }
 }
 .App {
+  width: 100%;
+}
+.App h2 {
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image: linear-gradient(135deg, #e5ff00, #00c3ff);
+  font-size: 4rem;
+  text-align: center;
+  width: 100%;
+  height: 50%;
+}
+
+.ai-answer {
   background: #ebf3f2;
   width: 50%;
   max-width: 100vw;
@@ -89,13 +103,6 @@ select {
   justify-content: center;
   margin: 0 auto;
   border-radius: 15px;
-}
-.App h2 {
-  color: #000;
-  font-size: 4rem;
-  text-align: center;
-  width: 100%;
-  height: 50%;
 }
 
 .ai-answer {
@@ -137,16 +144,17 @@ select {
   box-shadow: 5px 5px 35px rgba(107, 51, 100, 0.5176470588);
 }
 .ai-answer form button {
+  color: #fff;
   font-size: 1.125rem;
   padding: 0.5rem 1rem;
   border-radius: 15px;
-  background: #d3ffff;
+  background: linear-gradient(135deg, rgba(190, 0, 175, 0.6509803922), rgba(98, 0, 163, 0.6235294118));
   cursor: pointer;
-  transition: 0.3s;
+  transition: all 0.3s;
 }
 .ai-answer form button:hover {
-  background: #f7ffd3;
-  transform: scale(1.2) translate(0px, -3px);
+  background: linear-gradient(135deg, #ff00ea, #9900ff);
+  transform: scale(1.15) translate(0px, -3px);
 }
 .ai-answer form .controls {
   flex-direction: row;

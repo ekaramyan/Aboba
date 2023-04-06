@@ -3,8 +3,8 @@ import { generateText } from '../API/GPT';
 import { TextToSpeech } from '../API/voiceAPI';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
-import axios from 'axios';
-import FileSaver from 'file-saver';
+// import axios from 'axios';
+// import FileSaver from 'file-saver';
 
 
 const AIAnswer = () => {
@@ -74,7 +74,7 @@ const AIAnswer = () => {
                         onChange={(event) => setInputValue(event.target.value)}
                         onKeyPress={handleKeyPress}
                     />
-                    <button className='talk' onClick={handlePlayClick} disabled={!outputValue || loading}><FontAwesomeIcon icon={faVolumeHigh} style={{ color: "#000000" }} /></button>
+                    <button className='talk' onClick={handlePlayClick} disabled={!outputValue || loading}><FontAwesomeIcon icon={faVolumeHigh} style={{ color: "#fefefe" }} /></button>
                     <button type="submit" onClick={handleSubmit}>Submit</button>
                 </div>
             </form>
