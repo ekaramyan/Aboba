@@ -29,6 +29,8 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 80%;
+  height: 100%;
 
   .output {
     border: 1px solid black;
@@ -37,6 +39,7 @@
     margin-bottom: 1rem;
     white-space: pre-wrap;
     font-size: 1.5rem;
+    border: none;
   }
 
   form {
@@ -64,6 +67,11 @@
       border-radius: 15px;
       background: #f6f6f6c6;
       box-shadow:5px 5px 35px #6b336484;
+      border: #4b007e71;
+      &:focus{
+        outline: #9900ff;
+        // border: #9900ff;
+      }
     }
 
     button {
@@ -71,6 +79,7 @@
       font-size: 1.125rem;
       padding: 0.5rem 1rem;
       border-radius: 15px;
+      border: none;
       background: linear-gradient(135deg,#be00afa6,#6200a39f);
       cursor: pointer;
       transition: all .3s;
@@ -82,7 +91,6 @@
     
     .controls{
       flex-direction: row;
-
     }
   }
 }

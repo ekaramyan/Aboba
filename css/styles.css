@@ -109,6 +109,8 @@ select {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 80%;
+  height: 100%;
 }
 .ai-answer .output {
   border: 1px solid black;
@@ -117,6 +119,7 @@ select {
   margin-bottom: 1rem;
   white-space: pre-wrap;
   font-size: 1.5rem;
+  border: none;
 }
 .ai-answer form {
   display: flex;
@@ -142,12 +145,17 @@ select {
   border-radius: 15px;
   background: rgba(246, 246, 246, 0.7764705882);
   box-shadow: 5px 5px 35px rgba(107, 51, 100, 0.5176470588);
+  border: rgba(75, 0, 126, 0.4431372549);
+}
+.ai-answer form input:focus {
+  outline: #9900ff;
 }
 .ai-answer form button {
   color: #fff;
   font-size: 1.125rem;
   padding: 0.5rem 1rem;
   border-radius: 15px;
+  border: none;
   background: linear-gradient(135deg, rgba(190, 0, 175, 0.6509803922), rgba(98, 0, 163, 0.6235294118));
   cursor: pointer;
   transition: all 0.3s;
