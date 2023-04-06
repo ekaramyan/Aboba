@@ -6,22 +6,23 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const path = require('path');
 const { v4: uuidv4 } = require('uuid');
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg')
-const ffmpeg = require('ffmpeg');
-const multer = require('multer');
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
-const buffer = require('buffer')
-const bufferjs = require('bufferjs')
-const FileReader = require('FileReader')
-const { exec } = require('child_process');
+// const ffmpegPath = require('@ffmpeg-installer/ffmpeg')
+// const ffmpeg = require('fluent-ffmpeg');
+// const multer = require('multer');
+// const storage = multer.memoryStorage();
+// const upload = multer({ storage });
+// const buffer = require('buffer')
+// const bufferjs = require('bufferjs')
+// const FileReader = require('FileReader')
+// const { exec } = require('child_process');
+const { quickStart } = require('./TextToSpeech');
 
 
 
 const corsOptions = {
-    origin: 'http://localhost:5173', // домен сервиса, с которого будут приниматься запросы
-    optionsSuccessStatus: 200 // для старых браузеров
-}
+    origin: '*',
+    optionsSuccessStatus: 200
+};
 
 
 app.use(cors(corsOptions));
@@ -46,92 +47,25 @@ app.options('*', cors(corsOptions), (req, res) => {
 app.get('/cors', cors(corsOptions), (req, res) => {
     res.json({ msg: 'success!' });
 })
-// function toMP3(toConvert, audioPath) {
-//     return new Promise((resolve, reject) => {
-//         const command = ffmpeg()
-//             .input(toConvert)
-//             .audioCodec('libmp3lame')
-//             .format('mp3')
-//             .on('end', resolve)
-//             .on('error', reject)
-//             .save(audioPath)
-//     });
-// };
-// app.post('/saveBlob', upload.single('file'), async (req, res) => {
-//     const blob = req.body;
-//     const reader = new FileReader();
-//     let buffer = null;
-//     reader.readAsArrayBuffer(blob).onload = () => {
-//         buffer = reader.result;
-//         if (typeof buffer !== 'undefined') {
-//             const arrayBuffer = buffer.slice(0, buffer.byteLength);
-//             toMP3(arrayBuffer, audioPath);
-//         }
-//     };
 
-//     const fileId = uuidv4();
-//     const audioPath = path.join(__dirname, 'audio', `${fileId}.mp3`);
-//     const fileUrl = `http://localhost:3001/audio/${fileId}.mp3`
-//     console.log(buffer)
-//     try {
-//         const arrayBuffer = await blob.arrayBuffer();
-//         await toMP3(buffer, audioPath);
-//         res.send({ fileUrl });
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).send('Unable to convert audio');
-//     }
-// });
-function decodeBase64(base64str) {
-    const buffer = Buffer.from(base64str, 'base64');
-    return buffer;
-}
-
-// Функция для сохранения бинарных данных в виде mp3 файла
-function saveMP3(binaryData, filePath) {
-    return new Promise((resolve, reject) => {
-        const tmpFilePath = `${filePath}-tmp`;
-        fs.writeFile(tmpFilePath, binaryData, 'binary', (err) => {
-            if (err) {
-                reject(err);
-            } else {
-                exec(`ffmpeg -i ${tmpFilePath} ${filePath}`, (error, stdout, stderr) => {
-                    if (error) {
-                        console.error(`exec error: ${error}`);
-                        reject(error);
-                    } else {
-                        fs.unlink(tmpFilePath, (unlinkErr) => {
-                            if (unlinkErr) {
-                                console.error(`unlink error: ${unlinkErr}`);
-                            }
-                        });
-                        resolve();
-                    }
-                });
-            }
+app.post('/synthesize', async (req, res) => {
+    const voiceContent = req.body.text;
+    console.log(voiceContent)
+    const audioBlob = await quickStart(voiceContent);
+    if (audioBlob) {
+        const filename = uuidv4();
+        const filepath = path.join(__dirname, 'audio', `${filename}.mp3`);
+        const writer = fs.createWriteStream(filepath);
+        writer.on('finish', () => {
+            res.json({ filename });
         });
-    });
-}
-
-
-// Обработчик запроса для сохранения аудио в виде mp3 файла и получения ссылки на файл
-app.post('/saveBlob', upload.single('file'), async (req, res) => {
-    const blob = JSON.stringify(req.body);
-    const base64str = blob.substring(27, blob.length - 13)
-    console.log(base64str)
-    const fileId = uuidv4();
-    const filePath = path.join(__dirname, 'audio', `${fileId}.mp3`);
-    const fileUrl = `http://localhost:3001/audio/${fileId}.mp3`;
-
-    try {
-        const binaryData = decodeBase64(base64str);
-        await saveMP3(binaryData, filePath);
-        res.send({ fileUrl });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Unable to convert audio');
+        writer.write(await audioBlob.arrayBuffer());
+        writer.end();
+    } else {
+        res.sendStatus(500);
     }
 });
+
 app.use('/audio', express.static(path.join(__dirname, 'audio')));
 
 app.use((err, req, res, next) => {

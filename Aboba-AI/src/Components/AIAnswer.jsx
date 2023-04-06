@@ -23,18 +23,22 @@ const AIAnswer = () => {
             setOutputValue(generatedText);
             const generatedVoice = await TextToSpeech(generatedText);
             if (generatedVoice) {
-                const formData = new FormData();
-                formData.append('file', generatedVoice, 'filename.extension');
-                console.log(generatedVoice)
-                const { data } = await axios.post('http://localhost:3001/saveBlob', generatedVoice, {
-                    headers: {
-                        body: formData,
-                        // blob: generatedVoice,
-                        // 'Content-Type': 'application/json'
-                    }
-                });
-                console.log(data)
-                setAudioUrl(data.fileUrl);
+                // const formData = new FormData();
+                // formData.append('file', generatedVoice, 'filename.extension');
+                // console.log(generatedVoice)
+                // const { data } = await axios.post('http://localhost:3001/saveBlob', generatedVoice, {
+                //     headers: {
+                //         body: formData,
+                //         // blob: generatedVoice,
+                //         // 'Content-Type': 'application/json'
+                //     }
+                // });
+                // console.log(data)
+                // setAudioUrl(data.fileUrl);
+                setOutputValue(generatedText);
+                const url = window.URL.createObjectURL(new Blob([generatedVoice]));
+                setAudioUrl(url);
+                // setAudioUrl(generatedVoice)
             } else {
                 console.error('Error generating audio file');
             }
@@ -62,7 +66,8 @@ const AIAnswer = () => {
     const handlePlayClick = async (event) => {
         event.preventDefault();
         if (audioUrl) {
-            const audio = new Audio('data:audio/mpeg' + audioUrl);
+            const audio = new Audio(audioUrl);
+            audio.type = 'data:audio/mpeg'
             console.log(audio)
             audio.play();
         }

@@ -1,45 +1,17 @@
-import axios from 'axios'
-import { generateText } from './GPT';
+import axios from 'axios';
 
-const url = 'https://texttospeech.googleapis.com/v1/';
-const apiKey = import.meta.env.VITE_TEXT_TO_SPEECH_API_KEY
-const headers = {
-    // 'Authorization': `${apiKey}`,
-    // "X-User-ID": "DaXxPJKk52U1S2rZ3xoHEkFMme52",
-    'Content-Type': 'audio/mp3'
-}
+const apiUrl = 'http://localhost:3001'; // Замените на ваш URL бэкенда
 
-export async function TextToSpeech(voice_content) {
-    const data = {
-        'input': {
-            "text": `${voice_content}`,
-        },
-        'voice': {
-            'languageCode': 'en-IN',
-            'name': 'en-IN-Wavenet-B',
-            'ssmlGender': 'MALE'
-        },
-        'audioConfig': {
-            'audioEncoding': 'MP3'
-        }
-    };
-
+export async function TextToSpeech(voiceContent) {
     try {
-        const response = await axios.post(`${url}text:synthesize?key=${apiKey}`, data, { headers: headers, responseType: 'blob' });
-        const generatedVoice = new Blob([response.data], { type: 'audio/mp3' });
-        console.log(generatedVoice)
-        return generatedVoice;
+        const response = await axios.post(`${apiUrl}/synthesize`, { text: voiceContent });
+        const audioData = response.data;
+        console.log(response)
+        // Дальнейшая обработка аудиоданных
+        const filename = response.data.filename;
+        return `${apiUrl}/audio/${filename}.mp3`;
+    } catch (error) {
+        console.error(error);
+        return null
     }
-    catch (error) {
-        if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-
-        } else {
-            console.log('Error', error.message);
-        }
-        return null;
-    }
-
 }
