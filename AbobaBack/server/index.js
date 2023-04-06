@@ -50,11 +50,12 @@ app.get('/cors', cors(corsOptions), (req, res) => {
 
 app.post('/synthesize', async (req, res) => {
     const voiceContent = req.body.text;
-    console.log(voiceContent)
+    // console.log(voiceContent)
     const audioBlob = await quickStart(voiceContent);
     if (audioBlob) {
-        const filename = uuidv4();
+        const filename = 'output';
         const filepath = path.join(__dirname, 'audio', `${filename}.mp3`);
+        console.log(filepath)
         const writer = fs.createWriteStream(filepath);
         writer.on('finish', () => {
             res.json({ filename });
