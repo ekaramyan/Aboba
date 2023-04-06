@@ -52,16 +52,22 @@ app.post('/synthesize', async (req, res) => {
     const voiceContent = req.body.text;
     // console.log(voiceContent)
     const audioBlob = await quickStart(voiceContent);
+    // console.log('audioBlob', audioBlob)
     if (audioBlob) {
-        const filename = 'output';
-        const filepath = path.join(__dirname, 'audio', `${filename}.mp3`);
-        console.log(filepath)
-        const writer = fs.createWriteStream(filepath);
-        writer.on('finish', () => {
-            res.json({ filename });
-        });
-        writer.write(await audioBlob.arrayBuffer());
-        writer.end();
+        // const filename = 'output';
+        // const filepath = path.join(__dirname, 'audio', `${filename}.mp3`);
+        // console.log(filepath)
+        // const writer = fs.createWriteStream(filepath);
+        // writer.on('finish', () => {
+        //     res.json({ filename });
+        // });
+        // writer.write(await audioBlob.arrayBuffer());
+        // writer.end();
+        // res.type(audioBlob.type)
+        // audioBlob.arrayBuffer().then((buf) => {
+        //     res.send(Buffer.from(buf))
+        // })
+        res.send(audioBlob)
     } else {
         res.sendStatus(500);
     }

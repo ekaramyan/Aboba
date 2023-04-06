@@ -11,10 +11,7 @@ const AIAnswer = () => {
     const [inputValue, setInputValue] = useState('');
     const [outputValue, setOutputValue] = useState('');
     const [inputVoice, setinputVoice] = useState(null);
-    const [outputVoice, setOutputVoice] = useState(null);
     const [loading, setLoading] = useState(false);
-    //  const [isPlaying, setIsPlaying] = useState(false);
-    const [playAudio, setPlayAudio] = useState(false);
     const [audioUrl, setAudioUrl] = useState('');
 
     const SubmitText = async () => {
@@ -23,22 +20,12 @@ const AIAnswer = () => {
             setOutputValue(generatedText);
             const generatedVoice = await TextToSpeech(generatedText);
             if (generatedVoice) {
-                // const formData = new FormData();
-                // formData.append('file', generatedVoice, 'filename.extension');
-                // console.log(generatedVoice)
-                // const { data } = await axios.post('http://localhost:3001/saveBlob', generatedVoice, {
-                //     headers: {
-                //         body: formData,
-                //         // blob: generatedVoice,
-                //         // 'Content-Type': 'application/json'
-                //     }
-                // });
-                // console.log(data)
-                // setAudioUrl(data.fileUrl);
                 setOutputValue(generatedText);
-                const url = window.URL.createObjectURL(new Blob([generatedVoice]));
-                setAudioUrl(url);
-                // setAudioUrl(generatedVoice)
+                const byteArray = new Uint8Array(generatedVoice);
+                const blob = new Blob([byteArray], { type: 'audio/mpeg' });
+                const dataUrl = URL.createObjectURL(blob);
+                console.log(blob)
+                setAudioUrl(dataUrl);
             } else {
                 console.error('Error generating audio file');
             }
