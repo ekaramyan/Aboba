@@ -6,6 +6,7 @@ export async function TextToSpeech(voiceContent) {
     try {
         const response = await axios.post(`${apiUrl}/synthesize`, { text: voiceContent });
         const audioData = response.data.audioContent.data;
+        console.log(audioData)
         return audioData;
     } catch (error) {
         console.error(error);
