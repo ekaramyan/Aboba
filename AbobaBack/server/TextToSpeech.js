@@ -33,7 +33,6 @@ async function quickStart(voiceContent) {
         };
 
         const [audioResponse] = await textToSpeechClient.synthesizeSpeech(requestBody);
-        console.log(audioResponse, 'audioResponse')
         return audioResponse;
     } catch (error) {
         console.log('Error in textToSpeech:', error);

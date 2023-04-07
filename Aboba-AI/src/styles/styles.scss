@@ -5,29 +5,23 @@
     color: transparent;    
 	-webkit-background-clip: text;
 	background-clip: text;
-	background-image: linear-gradient(135deg,#e5ff00, #00c3ff );
+	background-image: linear-gradient(135deg,#fbff00, #00c3ff );
     font-size: 4rem;
     text-align: center;
     width: 100%;
     height: 50%;
   }
 }
+
 .ai-answer {
+  display: flex;
   background: #ebf3f2;
   width: 50%;
   max-width: 100vw;
-  display: flex;
   flex-direction: column;
   justify-content: center;
   margin: 0 auto;
   border-radius: 15px;
-
-
-}
-
-.ai-answer {
-  display: flex;
-  flex-direction: column;
   align-items: center;
   width: 80%;
   height: 100%;

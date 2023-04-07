@@ -12,14 +12,14 @@ const headers = {
 export async function generateText(prompt) {
     const data = {
         prompt: prompt,
-        model: "text-davinci-003",
-        max_tokens: 150,
-        temperature: 1.5,
-        frequency_penalty: 0,
-        presence_penalty: 0,
+        model: "davinci-instruct-beta",
+        max_tokens: 50,
+        temperature: 0.5,
+        top_p: 0.9,
         n: 1,
-        logprobs: 1,
-        stop: stop
+        stream: false,
+        logprobs: null,
+        stop: "\n"
     };
 
     try {

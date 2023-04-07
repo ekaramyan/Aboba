@@ -7,7 +7,7 @@ function App() {
   return (
     <>
       <div className="App">
-        <h2>Your AI helper</h2>
+        <h2>ABOBA-AI</h2>
         <AIAnswer className='ai-answer' />
       </div>
     </>
