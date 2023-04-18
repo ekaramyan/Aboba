@@ -13,13 +13,14 @@ export async function generateText(prompt) {
     const data = {
         prompt: prompt,
         model: "davinci-instruct-beta",
-        max_tokens: 50,
+        max_tokens: 150,
         temperature: 0.5,
         top_p: 0.9,
         n: 1,
         stream: false,
         logprobs: null,
-        stop: "\n"
+        // stop: "\n"
+        
     };
 
     try {

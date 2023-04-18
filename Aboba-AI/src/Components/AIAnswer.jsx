@@ -72,9 +72,14 @@ const AIAnswer = () => {
                     <input type="text" placeholder='Input your request...✎'
                         value={inputValue}
                         onChange={(event) => setInputValue(event.target.value)}
-                        onKeyPress={handleKeyPress}
+                        // onKeyPress={handleKeyPress}
                     />
-                    <button className='talk' onClick={handlePlayClick} disabled={!outputValue || loading}><FontAwesomeIcon icon={faVolumeHigh} style={{ color: "#fefefe" }} /></button>
+                    <button className='talk'
+                        onClick={handlePlayClick}
+                        disabled={!outputValue || loading}>
+                        <FontAwesomeIcon icon={faVolumeHigh}
+                            style={{ color: "#fefefe" }} />
+                    </button>
                     <button type="submit" onClick={handleSubmit}>Submit</button>
                 </div>
             </form>
