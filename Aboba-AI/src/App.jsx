@@ -1,13 +1,16 @@
 import { useState } from 'react'
 import './styles/styles.scss'
 import AIAnswer from './Components/AIAnswer'
+import Header from './Components/Header'
+
 
 function App() {
 
   return (
     <>
       <div className="App">
-        <h2>ABOBA-AI</h2>
+        <Header />
+        {/* <AITextAnswer /> */}
         <AIAnswer className='ai-answer' />
       </div>
     </>

@@ -3,6 +3,7 @@ import { generateText } from '../API/GPT';
 import { TextToSpeech } from '../API/voiceAPI';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
+import AITextAnswer from './AITextAnswer'
 // import axios from 'axios';
 // import FileSaver from 'file-saver';
 
@@ -17,14 +18,16 @@ const AIAnswer = () => {
     const SubmitText = async () => {
         const generatedText = await generateText(outputValue);
         if (generatedText) {
-            setOutputValue(generatedText);
+            // setOutputValue(generatedText);
+            console.log(outputValue)
             const generatedVoice = await TextToSpeech(generatedText);
             if (generatedVoice) {
                 setOutputValue(generatedText);
+                // console.log(outputValue)
                 const byteArray = new Uint8Array(generatedVoice);
                 const blob = new Blob([byteArray], { type: 'audio/mpeg' });
                 const dataUrl = URL.createObjectURL(blob);
-                console.log(blob)
+                // console.log(blob)
                 setAudioUrl(dataUrl);
             } else {
                 console.error('Error generating audio file');
@@ -48,8 +51,6 @@ const AIAnswer = () => {
         }
     };
 
-
-
     const handlePlayClick = async (event) => {
         event.preventDefault();
         if (audioUrl) {
@@ -62,29 +63,29 @@ const AIAnswer = () => {
 
 
     return (
-        <div className='ai-answer'>
-            <div className='output'>
-                <p>{outputValue}</p>
-            </div>
-            <form >
-                <div className='input__wrap'>
+        <div className='ai-chat'>
+            <AITextAnswer data={outputValue}>{loading && <p>Loading text...</p>}dddddd</AITextAnswer>
+            <div  className='ai-answer'>
 
-                    <input type="text" placeholder='Input your request...✎'
-                        value={inputValue}
-                        onChange={(event) => setInputValue(event.target.value)}
-                        // onKeyPress={handleKeyPress}
-                    />
-                    <button className='talk'
-                        onClick={handlePlayClick}
-                        disabled={!outputValue || loading}>
-                        <FontAwesomeIcon icon={faVolumeHigh}
-                            style={{ color: "#fefefe" }} />
-                    </button>
-                    <button type="submit" onClick={handleSubmit}>Submit</button>
-                </div>
-            </form>
-            {loading && <p>Loading sound...</p>}
-            {audioUrl && <audio src={audioUrl} autoPlay />}
+                <form >
+                    <div className='input__wrap'>
+                        <input type="text" placeholder='Input your request...✎'
+                            value={inputValue}
+                            onChange={(event) => setInputValue(event.target.value)}
+                            onKeyPress={handleKeyPress}
+                        />
+                        <button className='talk'
+                            onClick={handlePlayClick}
+                            disabled={!outputValue || loading}>
+                            <FontAwesomeIcon icon={faVolumeHigh}
+                                style={{ color: "#fefefe" }} />
+                        </button>
+                        <button type="submit" onClick={handleSubmit}>Submit</button>
+                    </div>
+                </form>
+                {loading && <p>Loading sound...</p>}
+                {audioUrl && <audio src={audioUrl} autoPlay />}
+            </div>
         </div>
     );
 };
