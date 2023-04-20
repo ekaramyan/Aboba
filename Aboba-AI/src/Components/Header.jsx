@@ -6,7 +6,7 @@ export default function Header() {
             <p>ABOBA-AI</p>
             <div className='controls'>
                 <select name="language" id="language"></select>
-                <button className='controls__btn'>Clean modeel's memory</button>
+                <button className='controls__btn'>Clean model's memory</button>
             </div>
         </div>
     )

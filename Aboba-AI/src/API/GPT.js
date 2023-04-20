@@ -10,7 +10,6 @@ const headers = {
 }
 
 export async function generateText(prompt) {
-    console.log(prompt)
     const data = {
         prompt: prompt,
         model: "davinci-instruct-beta",

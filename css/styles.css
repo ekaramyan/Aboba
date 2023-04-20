@@ -89,7 +89,7 @@ select {
   gap: 5%;
 }
 
-.ai-answer {
+.ai-ask {
   display: flex;
   background: rgba(196, 196, 196, 0.47);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -102,21 +102,21 @@ select {
   align-items: center;
   width: 80%;
 }
-.ai-answer form {
+.ai-ask form {
   display: flex;
   flex-direction: row;
   align-items: center;
   margin: 0 auto;
   width: 80%;
 }
-.ai-answer form .input__wrap {
+.ai-ask form .input__wrap {
   width: 100%;
   margin: 1rem 0;
   font-size: 1.125rem;
   display: flex;
   gap: 3%;
 }
-.ai-answer form input {
+.ai-ask form input {
   font-size: 1.125rem;
   height: 3rem;
   width: 100%;
@@ -127,10 +127,10 @@ select {
   box-shadow: 5px 5px 35px rgba(107, 51, 100, 0.5176470588);
   border: rgba(75, 0, 126, 0.4431372549);
 }
-.ai-answer form input:focus {
+.ai-ask form input:focus {
   outline: #9900ff;
 }
-.ai-answer form button {
+.ai-ask form button {
   color: #fff;
   font-size: 1.125rem;
   padding: 0.5rem 1rem;
@@ -140,11 +140,11 @@ select {
   cursor: pointer;
   transition: all 0.3s;
 }
-.ai-answer form button:hover {
+.ai-ask form button:hover {
   background: linear-gradient(135deg, #ff00ea, #9900ff);
   transform: scale(1.15) translate(0px, -3px);
 }
-.ai-answer form .controls {
+.ai-ask form .controls {
   flex-direction: row;
 }
 
@@ -181,6 +181,7 @@ select {
   background-image: linear-gradient(135deg, #fbff00, #00c3ff);
   font-size: 2rem;
   text-align: center;
+  user-select: none;
 }
 
 .controls {

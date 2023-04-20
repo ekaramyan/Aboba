@@ -4,6 +4,7 @@ import { TextToSpeech } from '../API/voiceAPI';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import AITextAnswer from './AITextAnswer'
+import AskAI from './AskAI';
 // import axios from 'axios';
 // import FileSaver from 'file-saver';
 
@@ -16,18 +17,16 @@ const AIAnswer = () => {
     const [audioUrl, setAudioUrl] = useState('');
 
     const SubmitText = async () => {
+        setLoading(true)
         const generatedText = await generateText(outputValue);
         if (generatedText) {
-            // setOutputValue(generatedText);
-            console.log(outputValue)
+            setLoading(false)
             const generatedVoice = await TextToSpeech(generatedText);
             if (generatedVoice) {
                 setOutputValue(generatedText);
-                // console.log(outputValue)
                 const byteArray = new Uint8Array(generatedVoice);
                 const blob = new Blob([byteArray], { type: 'audio/mpeg' });
                 const dataUrl = URL.createObjectURL(blob);
-                // console.log(blob)
                 setAudioUrl(dataUrl);
             } else {
                 console.error('Error generating audio file');
@@ -37,17 +36,13 @@ const AIAnswer = () => {
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        setLoading(true);
         SubmitText()
-        setLoading(false);
     };
 
     const handleKeyPress = async (event) => {
         if (event.key === 'Enter') {
             event.preventDefault();
-            setLoading(true);
-            SubmitText()
-            setLoading(false);
+            SubmitText();
         }
     };
 
@@ -64,26 +59,17 @@ const AIAnswer = () => {
 
     return (
         <div className='ai-chat'>
-            <AITextAnswer data={outputValue}>{loading && <p>Loading text...</p>}dddddd</AITextAnswer>
-            <div  className='ai-answer'>
-
-                <form >
-                    <div className='input__wrap'>
-                        <input type="text" placeholder='Input your request...✎'
-                            value={inputValue}
-                            onChange={(event) => setInputValue(event.target.value)}
-                            onKeyPress={handleKeyPress}
-                        />
-                        <button className='talk'
-                            onClick={handlePlayClick}
-                            disabled={!outputValue || loading}>
-                            <FontAwesomeIcon icon={faVolumeHigh}
-                                style={{ color: "#fefefe" }} />
-                        </button>
-                        <button type="submit" onClick={handleSubmit}>Submit</button>
-                    </div>
-                </form>
-                {loading && <p>Loading sound...</p>}
+            <AITextAnswer data={outputValue} loading={loading} />
+            <div className='ai-ask'>
+                <AskAI
+                    clickSubmit={handleSubmit}
+                    playSound={handlePlayClick}
+                    inputValue={inputValue}
+                    setInputValue={setInputValue}
+                    outputValue={outputValue}
+                    onEnterPress={handleKeyPress}
+                    loading={loading}
+                />
                 {audioUrl && <audio src={audioUrl} autoPlay />}
             </div>
         </div>
