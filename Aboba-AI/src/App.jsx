@@ -13,7 +13,6 @@ function App() {
     <>
       <div className="App">
         <Header handleChange={setLanguage} />
-        {/* <AITextAnswer /> */}
         <AIAnswer language={language} />
       </div>
     </>

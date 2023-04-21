@@ -18,15 +18,18 @@ export default function Header({ handleChange }) {
     ]
 
     const handleChangeLanguage = (event) => {
+        // const id = event.target.value;
+        // setLanguage(languages[id]);
         const id = event.target.value;
         setLanguage(languages[id]);
+        handleChange(languages[id]);
       }
     
-      const onSelectClick = async (event) => {
-        event.preventDefault();
-        console.log(language);
-        handleChange(language);
-      }
+    //   const onSelectClick = async (event) => {
+    //     event.preventDefault();
+    //     console.log(language);
+    //     handleChange(language);
+    //   }
 
     return (
         <div className='header'>
@@ -41,7 +44,7 @@ export default function Header({ handleChange }) {
                             </option>
                         })}
                     </select>
-                    <button className='languageBtn' onClick={onSelectClick}>Change voice languge</button>
+                    {/* <button className='languageBtn' onClick={onSelectClick}>Change voice languge</button> */}
                 </form>
                 <button className='controls__btn' onClick={onCleanClick}>Clean model's memory</button>
             </div>
