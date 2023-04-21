@@ -41,13 +41,17 @@ app.get('/cors', cors(corsOptions), (req, res) => {
 
 app.post('/synthesize', async (req, res) => {
     const voiceContent = req.body.text;
-    const audioBlob = await quickStart(voiceContent);
+    const name = req.body.name;
+    const languageCode = req.body.languageCode;
+    const ssmlGender = req.body.ssmlGender;
+    const audioBlob = await quickStart(voiceContent, name, languageCode, ssmlGender);
     if (audioBlob) {
         res.send(audioBlob)
     } else {
         res.sendStatus(500);
     }
 });
+
 
 app.use('/audio', express.static(path.join(__dirname, 'audio')));
 

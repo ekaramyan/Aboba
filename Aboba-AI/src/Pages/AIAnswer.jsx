@@ -3,13 +3,15 @@ import { generateText } from '../API/GPT';
 import { TextToSpeech } from '../API/voiceAPI';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
-import AITextAnswer from './AITextAnswer'
-import AskAI from './AskAI';
+import AITextAnswer from '../Components/AITextAnswer'
+import AskAI from '../Components/AskAI';
+// import 
 // import axios from 'axios';
 // import FileSaver from 'file-saver';
 
 
-const AIAnswer = () => {
+const AIAnswer = ({language}) => {
+    console.log(language)
     const [inputValue, setInputValue] = useState('');
     const [outputValue, setOutputValue] = useState('');
     const [inputVoice, setinputVoice] = useState(null);
@@ -18,16 +20,16 @@ const AIAnswer = () => {
 
     const SubmitText = async () => {
         setLoading(true)
-        const generatedText = await generateText(outputValue);
+        const generatedText = await generateText(inputValue);
         if (generatedText) {
-            setLoading(false)
-            const generatedVoice = await TextToSpeech(generatedText);
+            const generatedVoice = await TextToSpeech(generatedText, language.languageCode, language.value, language.gender);
             if (generatedVoice) {
                 setOutputValue(generatedText);
                 const byteArray = new Uint8Array(generatedVoice);
                 const blob = new Blob([byteArray], { type: 'audio/mpeg' });
                 const dataUrl = URL.createObjectURL(blob);
                 setAudioUrl(dataUrl);
+                setLoading(false)
             } else {
                 console.error('Error generating audio file');
             }

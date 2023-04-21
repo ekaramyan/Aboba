@@ -12,7 +12,8 @@ const auth = new GoogleAuth({
     scopes: ['https://www.googleapis.com/auth/cloud-platform']
 });
 
-async function quickStart(voiceContent) {
+async function quickStart(voiceContent, name, languageCode, ssmlGender) {
+    console.log(name, languageCode, ssmlGender)
     try {
         const client = await auth.getClient();
         const accessToken = await client.getAccessToken();
@@ -28,7 +29,7 @@ async function quickStart(voiceContent) {
         const textToSpeechClient = new textToSpeech.TextToSpeechClient();
         const requestBody = {
             input: { text: voiceContent },
-            voice: { languageCode: 'en-IN', name: 'en-IN-Wavenet-B', ssmlGender: 'MALE' },
+            voice: { languageCode: languageCode, name: name, ssmlGender: ssmlGender },
             audioConfig: { audioEncoding: 'MP3', volume: 1.5 }
         };
 

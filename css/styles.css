@@ -187,4 +187,31 @@ select {
 .controls {
   display: flex;
   justify-content: space-around;
+  gap: 5%;
+}
+.controls select, .controls button {
+  cursor: pointer;
+  border-radius: 1em;
+  padding: 0 0.3em;
+  border: none;
+  color: #dfdfdf;
+  background: rgba(204, 0, 255, 0.4352941176);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.148);
+  transition: 0.4s;
+}
+.controls select:hover, .controls button:hover {
+  background: rgba(204, 0, 255, 0.5843137255);
+  box-shadow: -10px 30px 100px rgba(165, 34, 189, 0.148);
+}
+.controls .option {
+  cursor: pointer;
+  border-radius: 1em;
+  border: none;
+  color: #f1e1f3;
+  background: rgb(37, 29, 42);
+  padding: 0.2em;
+  transition: 0.3s;
+}
+.controls form {
+  display: flex;
 }
