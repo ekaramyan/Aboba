@@ -1,14 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { generateText } from '../API/GPT';
 import { TextToSpeech } from '../API/voiceAPI';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 import AITextAnswer from '../Components/AITextAnswer'
 import AskAI from '../Components/AskAI';
-// import 
-// import axios from 'axios';
-// import FileSaver from 'file-saver';
-
 
 const AIAnswer = ({language}) => {
     console.log(language)

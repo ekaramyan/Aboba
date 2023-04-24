@@ -2,13 +2,15 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVolumeHigh } from '@fortawesome/free-solid-svg-icons';
 
-const AskAI = ({ clickSubmit, playSound, inputValue, setInputValue, outputValue, onEnterPress, loading}) => {
-  const handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      event.preventDefault();
-      clickSubmit();
-    }
-  };
+const AskAI = ({ 
+  clickSubmit,
+  playSound,
+  inputValue,
+  setInputValue,
+  outputValue,
+  onEnterPress,
+  loading }) => {
+
 
   return (
     <>
@@ -31,7 +33,6 @@ const AskAI = ({ clickSubmit, playSound, inputValue, setInputValue, outputValue,
           <button type="submit" onClick={clickSubmit}>Submit</button>
         </div>
       </form>
-      {/* {audioUrl && <audio src={audioUrl} autoPlay />} */}
     </>
   );
 };
