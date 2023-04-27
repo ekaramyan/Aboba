@@ -40,9 +40,7 @@ export default function Header({ handleChange }) {
 
     useEffect(() => {
         const lang_id = parseInt(getCookie('voice_laguage_id'), 10);
-        console.log(languages[lang_id])
         if (lang_id) {
-            console.log(languages[lang_id])
             setLanguage(languages[lang_id])
             handleChange(languages[lang_id]);
         } else {
