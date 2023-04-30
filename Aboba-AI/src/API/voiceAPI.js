@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = 'http://localhost:3001';
+const apiUrl = 'http://172.20.10.3:3001'; // enter your PC ip
 
 export async function TextToSpeech(voiceContent, language, name, gender) {
     try {

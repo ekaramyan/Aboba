@@ -67,6 +67,6 @@ app.use((req, res, next) => {
 
 // app.use('/audioFiles', express.static(path.join(__dirname, 'audioFiles')));
 
-app.listen(3001, () => {
-    console.log('Server is running on port 3001');
+app.listen(3001, '172.20.10.3', () => { //enter your PC ip
+    console.log('Server is running on port 3001 and on 172.20.10.2:3001');
 });

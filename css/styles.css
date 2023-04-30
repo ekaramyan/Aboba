@@ -154,6 +154,7 @@ select {
   height: 100%;
   gap: 5%;
   align-items: center;
+  position: relative;
 }
 
 .ai-text {
@@ -173,6 +174,7 @@ select {
   display: flex;
   justify-content: space-between;
   padding: 0.3%;
+  align-items: center;
   background: rgba(129, 129, 129, 0.2);
   box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
 }
@@ -190,6 +192,8 @@ select {
 .controls {
   display: flex;
   justify-content: space-around;
+  display: flex;
+  flex-direction: row;
   gap: 5%;
   margin: 0.5% 1%;
 }
@@ -250,6 +254,7 @@ select {
 }
 .sound-visualizer {
   position: absolute;
-  width: 100%;
+  width: 80%;
   max-height: 50%;
+  margin: auto 0;
 }

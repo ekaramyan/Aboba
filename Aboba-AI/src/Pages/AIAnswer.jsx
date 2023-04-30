@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { generateText } from '../API/GPT';
 import { TextToSpeech } from '../API/voiceAPI';
 import AITextAnswer from '../Components/AITextAnswer'
 import AskAI from '../Components/AskAI';
-// import  SoundVisualizer  from '../Animations/animateSound';
+import SoundVisualizer from '../Animations/animateSound';
 
 const AIAnswer = ({ language }) => {
     console.log(language)
@@ -13,6 +13,8 @@ const AIAnswer = ({ language }) => {
     const [audioUrl, setAudioUrl] = useState('');
     const [inputVoice, setinputVoice] = useState(null);
     const [isListening, setIsListening] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(false);
+    const audioRef = useRef(null);
 
     const SubmitText = async () => {
         setLoading(true)
@@ -26,6 +28,7 @@ const AIAnswer = ({ language }) => {
                 const dataUrl = URL.createObjectURL(blob);
                 setAudioUrl(dataUrl);
                 setLoading(false)
+                setIsPlaying(true);
             } else {
                 console.error('Error generating audio file');
             }
@@ -50,6 +53,12 @@ const AIAnswer = ({ language }) => {
             const audio = new Audio(audioUrl);
             audio.type = 'data:audio/mpeg'
             audio.play();
+            if (audio.isPlaying) {
+                setIsPlaying(true);
+            }
+            else {
+                setIsPlaying(false)
+            }
         }
     };
 
@@ -90,10 +99,10 @@ const AIAnswer = ({ language }) => {
 
     return (
         <div className='ai-chat'>
-              
-            {/* <SoundVisualizer audioUrl={audioUrl}/> */}
             <AITextAnswer data={outputValue} loading={loading} />
-          
+
+            {audioUrl && <audio ref={audioRef} src={audioUrl} autoPlay />}
+            {audioRef && <SoundVisualizer audioRef={audioRef} isPlaying={isPlaying} setIsPlaying={setIsPlaying} />}
 
             <div className='ai-ask'>
                 <AskAI
@@ -109,7 +118,6 @@ const AIAnswer = ({ language }) => {
                     isListening={isListening}
                 />
 
-                {audioUrl && <audio src={audioUrl} autoPlay />}
             </div>
         </div>
     );

@@ -1,56 +1,104 @@
-import React, { useRef, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-const SoundVisualizer = ({ audioUrl }) => {
+const SoundVisualizer = ({ audioRef, isPlaying, setIsPlaying }) => {
   const canvasRef = useRef(null);
+  const audioContextRef = useRef(null);
+  const animationIdRef = useRef(null);
+  const [isReady, setIsReady] = useState(false);
+
+console.log(isPlaying, isReady)
 
   useEffect(() => {
+    console.log(audioRef)
+    if (audioRef.current) {
+      setIsReady(true);
+    }
+    else {
+      setIsReady(false)
+    }
+    if(isPlaying===false){
+      setIsReady(false)
+    }
+  },[audioRef, isPlaying]);
+
+  useEffect(() => {
+    if (!isReady) {
+      return;
+    }
+
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
+    const context = canvas.getContext('2d');
+    const audioContext = new AudioContext();
+    audioContextRef.current = audioContext;
 
-    // Функция для рисования визуализации звука
-    const draw = (dataArray) => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const source = audioContext.createMediaElementSource(audioRef.current);
+    source.connect(audioContext.destination);
 
-      const barWidth = canvas.width / dataArray.length;
-      let barHeight;
-      let x = 0;
-
-      for (let i = 0; i < dataArray.length; i++) {
-        barHeight = dataArray[i] / 2;
-
-        ctx.fillStyle = `rgb(${barHeight + 100},50,50)`;
-        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-
-        x += barWidth + 1;
-      }
-    };
-
-    // Создаем аудио-элемент и подключаем к нему анализатор
-    const audio = new Audio(audioUrl);
-    const audioCtx = new AudioContext();
-    const source = audioCtx.createMediaElementSource(audio);
-    const analyser = audioCtx.createAnalyser();
+    const analyser = audioContext.createAnalyser();
     source.connect(analyser);
-    analyser.connect(audioCtx.destination);
+    analyser.fftSize = 2048;
 
-    // Устанавливаем настройки анализатора
-    analyser.fftSize = 256;
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
 
-    // Рисуем визуализацию звука каждые 16 миллисекунд
-    const renderFrame = () => {
-      requestAnimationFrame(renderFrame);
+    const draw = () => {
       analyser.getByteFrequencyData(dataArray);
-      draw(dataArray);
+
+      const width = canvas.width;
+      const height = canvas.height;
+
+      context.clearRect(0, 0, width, height);
+
+      const barWidth = width / bufferLength;
+
+      let x = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        const barHeight = (dataArray[i] / 255) * height;
+
+        const hue = i / bufferLength * 360;
+        context.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
+
+        const y = height / 2 - barHeight / 2;
+        context.fillRect(x, y, barWidth, barHeight);
+
+        x += barWidth + 1; // +1 is for a gap between bars
+      }
+
+      animationIdRef.current = requestAnimationFrame(draw);
     };
-    audio.play()
-    audio.volume = 0
-    renderFrame();
-  }, [audioUrl]);
+
+    draw();
+
+    setIsReady(true);
+
+    return () => {
+      if (audioContextRef.current) {
+        audioContextRef.current.close();
+      }
+      if (animationIdRef.current) {
+        cancelAnimationFrame(animationIdRef.current);
+      }
+    };
+  }, [audioRef, isReady]);
+
+  useEffect(() => {
+    if (!audioRef.current) {
+      return;
+    }
+
+    const handleCanPlayThrough = () => {
+      setIsReady(true);
+    };
+
+    audioRef.current.addEventListener('canplaythrough', handleCanPlayThrough);
+
+    return () => {
+      audioRef.current.removeEventListener('canplaythrough', handleCanPlayThrough);
+    };
+  }, [audioRef]);
 
   return (
-    <canvas ref={canvasRef} className='sound-visualizer' />
+    <canvas ref={canvasRef}  className='sound-visualizer'></canvas>
   );
 };
 
