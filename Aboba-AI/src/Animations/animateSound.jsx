@@ -5,8 +5,9 @@ const SoundVisualizer = ({ audioRef, isPlaying, setIsPlaying }) => {
   const audioContextRef = useRef(null);
   const animationIdRef = useRef(null);
   const [isReady, setIsReady] = useState(false);
+  const [animationCounter, setAnimationCounter] = useState(0);
 
-console.log(isPlaying, isReady)
+  console.log(isPlaying, isReady)
 
   useEffect(() => {
     console.log(audioRef)
@@ -15,11 +16,12 @@ console.log(isPlaying, isReady)
     }
     else {
       setIsReady(false)
+      setAnimationCounter(0)
     }
-    if(isPlaying===false){
+    if (isPlaying === false) {
       setIsReady(false)
     }
-  },[audioRef, isPlaying]);
+  }, [isPlaying]);
 
   useEffect(() => {
     if (!isReady) {
@@ -56,7 +58,7 @@ console.log(isPlaying, isReady)
         const barHeight = (dataArray[i] / 255) * height;
 
         const hue = i / bufferLength * 360;
-        context.fillStyle = 'hsl(' + hue + ', 100%, 50%)';
+        context.fillStyle = 'hsl(' + 300 + ', 100%, 50%)';
 
         const y = height / 2 - barHeight / 2;
         context.fillRect(x, y, barWidth, barHeight);
@@ -87,7 +89,12 @@ console.log(isPlaying, isReady)
     }
 
     const handleCanPlayThrough = () => {
-      setIsReady(true);
+      if (isPlaying) {
+        setIsReady(true);
+      } else {
+        setAnimationCounter(0)
+        setIsReady(false);
+      }
     };
 
     audioRef.current.addEventListener('canplaythrough', handleCanPlayThrough);
@@ -98,7 +105,7 @@ console.log(isPlaying, isReady)
   }, [audioRef]);
 
   return (
-    <canvas ref={canvasRef}  className='sound-visualizer'></canvas>
+    <canvas ref={canvasRef} className='sound-visualizer'></canvas>
   );
 };
 

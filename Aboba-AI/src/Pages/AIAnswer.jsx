@@ -50,17 +50,23 @@ const AIAnswer = ({ language }) => {
     const handlePlayClick = async (event) => {
         event.preventDefault();
         if (audioUrl) {
-            const audio = new Audio(audioUrl);
-            audio.type = 'data:audio/mpeg'
+          const audio = new Audio(audioUrl);
+          audio.type = 'data:audio/mpeg';
+      
+          if (isPlaying) {
+            audio.load();
+            setIsPlaying(false);
+          } else {
+            setIsPlaying(true);
             audio.play();
-            if (audio.isPlaying) {
-                setIsPlaying(true);
-            }
-            else {
-                setIsPlaying(false)
-            }
+          }
+      
+          audio.addEventListener('ended', () => {
+            setIsPlaying(false);
+          });
         }
-    };
+      };
+      
 
 
     const handleListen = (e) => {
