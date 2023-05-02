@@ -23,5 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 ../css
-.././css
+../css/
+css
 .env
