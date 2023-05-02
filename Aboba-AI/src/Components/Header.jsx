@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBroom } from '@fortawesome/free-solid-svg-icons';
 
 export default function Header({ handleChange }) {
     const [language, setLanguage] = useState(null)
@@ -22,7 +24,7 @@ export default function Header({ handleChange }) {
         { id: 11, name: 'French', languageCode: 'fr-FR', value: 'fr-FR-Neural2-A', gender: 'FEMALE' },
         { id: 12, name: 'Italian', languageCode: 'it-IT', value: 'it-IT-Neural2-C', gender: 'MALE' },
     ]
-   
+
     function getCookie(cname) {
         let name = cname + "=";
         let ca = document.cookie.split(';');
@@ -72,7 +74,7 @@ export default function Header({ handleChange }) {
                     </select>
                     {/* <button className='languageBtn' onClick={onSelectClick}>Change voice languge</button> */}
                 </form>
-                <button className='controls__btn' onClick={onCleanClick}>Clean model's memory</button>
+                <button className='controls__btn' onClick={onCleanClick}><FontAwesomeIcon icon={faBroom} /></button>
             </div>
             {/* <AIAnswer language={language} /> */}
         </div >

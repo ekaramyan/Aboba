@@ -50,23 +50,23 @@ const AIAnswer = ({ language }) => {
     const handlePlayClick = async (event) => {
         event.preventDefault();
         if (audioUrl) {
-          const audio = new Audio(audioUrl);
-          audio.type = 'data:audio/mpeg';
-      
-          if (isPlaying) {
-            audio.load();
-            setIsPlaying(false);
-          } else {
-            setIsPlaying(true);
-            audio.play();
-          }
-      
-          audio.addEventListener('ended', () => {
-            setIsPlaying(false);
-          });
+            const audio = new Audio(audioUrl);
+            audio.type = 'data:audio/mpeg';
+
+            // if (isPlaying) {
+            //     audio.pause();
+            //     setIsPlaying(false);
+            // } else {
+                audio.play();
+                setIsPlaying(true);
+            // }
+
+            // audio.addEventListener('ended', () => {
+            //     setIsPlaying(false);
+            // });
         }
-      };
-      
+    };
+
 
 
     const handleListen = (e) => {

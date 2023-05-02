@@ -5,31 +5,23 @@ const SoundVisualizer = ({ audioRef, isPlaying, setIsPlaying }) => {
   const audioContextRef = useRef(null);
   const animationIdRef = useRef(null);
   const [isReady, setIsReady] = useState(false);
-  const [animationCounter, setAnimationCounter] = useState(0);
-
-  console.log(isPlaying, isReady)
 
   useEffect(() => {
-    console.log(audioRef)
     if (audioRef.current) {
       setIsReady(true);
-    }
-    else {
-      setIsReady(false)
-      setAnimationCounter(0)
+    } else {
+      setIsReady(false);
     }
     if (isPlaying === false) {
-      setIsReady(false)
+      setIsReady(false);
     }
-  }, [isPlaying]);
+  }, [isPlaying, audioRef]);
 
   useEffect(() => {
     if (!isReady) {
       return;
     }
 
-    const canvas = canvasRef.current;
-    const context = canvas.getContext('2d');
     const audioContext = new AudioContext();
     audioContextRef.current = audioContext;
 
@@ -43,15 +35,10 @@ const SoundVisualizer = ({ audioRef, isPlaying, setIsPlaying }) => {
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
 
-    const draw = () => {
+    const draw = (context, width, height, barWidth) => {
       analyser.getByteFrequencyData(dataArray);
 
-      const width = canvas.width;
-      const height = canvas.height;
-
       context.clearRect(0, 0, width, height);
-
-      const barWidth = width / bufferLength;
 
       let x = 0;
       for (let i = 0; i < bufferLength; i++) {
@@ -65,13 +52,27 @@ const SoundVisualizer = ({ audioRef, isPlaying, setIsPlaying }) => {
 
         x += barWidth + 1; // +1 is for a gap between bars
       }
-
-      animationIdRef.current = requestAnimationFrame(draw);
     };
 
-    draw();
+    const animate = () => {
+      const canvas = canvasRef.current;
+      const context = canvas.getContext('2d');
 
-    setIsReady(true);
+      const width = canvas.width;
+      const height = canvas.height;
+
+      const barWidth = width / bufferLength;
+
+      draw(context, width, height, barWidth);
+
+      if (isPlaying) {
+        animationIdRef.current = requestAnimationFrame(animate);
+      } else {
+        cancelAnimationFrame(animationIdRef.current);
+      }
+    };
+
+    animate();
 
     return () => {
       if (audioContextRef.current) {
@@ -81,7 +82,7 @@ const SoundVisualizer = ({ audioRef, isPlaying, setIsPlaying }) => {
         cancelAnimationFrame(animationIdRef.current);
       }
     };
-  }, [audioRef, isReady]);
+  }, [isReady, audioRef, isPlaying]);
 
   useEffect(() => {
     if (!audioRef.current) {
@@ -92,7 +93,6 @@ const SoundVisualizer = ({ audioRef, isPlaying, setIsPlaying }) => {
       if (isPlaying) {
         setIsReady(true);
       } else {
-        setAnimationCounter(0)
         setIsReady(false);
       }
     };
@@ -102,7 +102,7 @@ const SoundVisualizer = ({ audioRef, isPlaying, setIsPlaying }) => {
     return () => {
       audioRef.current.removeEventListener('canplaythrough', handleCanPlayThrough);
     };
-  }, [audioRef]);
+  }, [audioRef, isPlaying]);
 
   return (
     <canvas ref={canvasRef} className='sound-visualizer'></canvas>
